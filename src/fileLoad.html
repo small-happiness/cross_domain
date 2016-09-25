@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--<form action="/upload" enctype="multipart/form-data" method="post">
+    <p><input type="file" name="myfile"></p>
+    <p><input type="submit" value="普通文件上传"></p>
+</form>-->
+
+<p>
+    创建formdata对象，该对象是h5新规定的，可以用来存储需要上传的文件，并通过传输formdata来实现文件的异步上传
+</p>
+<p>
+    常用的监听事件包括：process，send,
+</p>
+<div>
+    <p>附件: <input id="MF" type="file" name="file"></p>
+    <p>
+        <input type="button" value="异步上传" onclick="upload()">
+        <span>正在上传……</span>
+        <button>停止上传</button>
+    </p>
+</div>
+<script src="js/jquery-1.11.3.js"></script>
+<script>
+    function upload() {
+        //准备formdata
+        var fd = new FormData();
+        fd.append('Mf',$('#MF')[0].files[0]);
+
+        var xhr = new XMLHttpRequest();
+
+//        监听事件，实时响应
+//        xhr,xhr.upload都有progress事件，xhr.progress是下载进度，xhr.upload.progress是上传进度
+        xhr.upload.progress = function (e) {
+//            事件对象在这里有几个可用参数：
+//            e.lengthComputable（当文件按比较小，或者没有获取到文件长度的时候，为false）
+//            e.total (当前文件的总大小，以字节为单位)
+//            e.load（当前文件已上传大小）
+        }
+
+//        传输开始事件，在开始传输时候触发
+        xhr.onloadstart = function (e) {
+//            绑定一个一次性事件
+//            终止网络请求，结束文件上传
+            xhr.abort();
+        }
+
+//      文件传输结束
+        xhr.onload = function (e) {
+            var ret = JSON.parse(xhr.responseText);
+            console.log(xhr.responseText);
+            console.log(xhr.responseType);
+        };
+        
+//        文件传输出错的情况
+        xhr.onerror = function (e) {
+            
+        }
+
+    }
+    
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button onclick="crossAjax()">~~~~~~~~~</button>
+<script src="js/jquery-1.11.3.js"></script>
+<script>
+    function crossAjax() {
+        $.ajax('http://b.test.com/test', {
+            type: 'PUT',
+            headers: {h: 'haha'}
+        }).done(function(data) {
+            alert(data);
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+我在A域
+<button onclick="crossDomain()">点我</button>
+<iframe id="fr"  src="http://b.test.com/cors.html" frameborder="0"></iframe>
+</body>
+<script src="js/jquery-1.11.3.js"></script>
+<script>
+    function crossAjax() {
+        var url = 'http://b.test.com/test';
+        $.ajax(url).done(function (data) {
+            alert(data)
+        }).fail(function () {
+            alert('fail')
+        })
+    }
+    function crossDomain() {
+//        将跨域的两个文件提升到根域
+        document.domain = 'test.com';
+//        window.frames['fr'].contentWindow 是取得该frame的window对象，来调用它的函数，ajax请求还是从
+        window.frames['fr'].contentWindow.doAjax(function (data) {
+            alert(data);
+        })
+    }
+</script>
+</html>

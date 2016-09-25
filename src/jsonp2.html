@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jsonp的实际使用</title>
+</head>
+<body>
+<h3>jsonp的缺点</h3>
+<p>仅支持get方式，且后端代码要调整</p>
+<h3>jquery 对jsonp的支持</h3>
+<p>getJSON()</p>
+<button onclick="getJsonTest()">getJson()</button>
+<p>$.ajax</p>
+<button onclick="ajaxTest()">getJson()</button>
+<p>$.ajax way2</p>
+<button onclick="ajaxTest2()">getJson()</button>
+<script src="js/jquery-1.11.3.js"></script>
+<script>
+    /*自己简短测试封装jsonp*/
+function jsonp(url, data, callback) {
+    var script = document.createElement('script');
+    document.body.appendChild(script);
+
+    data = data || {};
+    data.callback = 'hello' + new Date().getTime();
+    window[data.callback] = callback;//为回掉函数指示别名，让后台知道该如何返回脚本
+
+    url+='?'+$.param(data);
+
+    script.src = url;
+    script.onload = function () {
+        document.body.removeChild(script);
+    }
+}
+
+(function () {
+    jsonp('http://b.test.com/testjsonp2', {test:'ok'}, function (data) {
+//        处理逻辑
+        console.log(data);
+    })
+})();
+/*end 简短测试封装jsonp*/
+
+/*用jquery实现跨域
+* 1 getJSON()
+* */
+   function getJsonTest() {
+//       注意：在使用getJSON方法的时候，必须在后边跟一个“callback=？”，否则方法不识别为跨
+// 域请求，callback指代函数名，可以自行更改名字
+       $.getJSON('http://b.test.com/testjsonp2?callback=?',{test:'ok'},function (data) {
+            console.log(data);
+       })
+   }
+
+   /*
+   * 2 使用$.ajax 实现跨域请求
+   * */
+   function ajaxTest() {
+//       这里因为指明了方式为跨域请求，所以接口中的callback可有可无
+       $.ajax('http://b.test.com/testjsonp2？callback=?',{
+           dataType:'jsonp',
+           data:{test:'ok'}
+       }).done(function (data) {
+           //跨域返回后的逻辑代码
+           console.log(data);
+       })
+   }
+
+   /*
+   * 3 $.ajax 实现跨域的另一种写法
+   * */
+   function ajaxTest2() {
+//       这种写法只是将原本接口中的“callback”用jsnop值指明名字（后台也要相应）
+       $.ajax('http://b.test.com/testjsonp2？callback=?',{
+           dataType:'jsonp',
+           jsonp:'cbname',
+           jsonpCallback:'cbfun',
+           data:{test:'ok'}
+       })
+   }
+   
+
+
+</script>
+</body>
+</html>

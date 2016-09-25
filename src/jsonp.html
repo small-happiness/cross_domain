@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jsonp</title>
+</head>
+<body>
+<h3>jsonp跨域的本质不是ajax，而是执行了一段跨域脚本</h3>
+</body>
+<script>
+    function callback(data) {
+        //这里写跨域数据执行逻辑
+        alert('请看控制台输出');
+        console.log(data)
+    }
+</script>
+<script src="http://b.test.com/testjsonp"></script>
+<!--这里因为是向另外一个域发起的请求，所以返回的数据应该是另一个域的后台返回-->
+</html>
